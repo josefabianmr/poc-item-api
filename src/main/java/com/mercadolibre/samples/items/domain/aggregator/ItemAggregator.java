@@ -2,6 +2,7 @@ package com.mercadolibre.samples.items.domain.aggregator;
 
 import com.mercadolibre.samples.items.domain.entities.Item;
 import com.mercadolibre.samples.items.domain.exceptions.InvalidItemException;
+import com.mercadolibre.samples.items.domain.exceptions.NotFoundItemException;
 import com.mercadolibre.samples.items.domain.repositories.ItemRepository;
 import com.mercadolibre.samples.items.domain.vo.Attribute;
 import java.util.List;
@@ -30,7 +31,10 @@ public class ItemAggregator {
     public static CompletionStage<ItemAggregator> load(final ItemRepository repository, final String itemId, final String sellerId) {
         return repository.findItemByIdAndSellerId(itemId, sellerId)
             .thenApply(item -> {
-                var aggregator = create(repository, sellerId);
+                final var aggregator = create(repository, sellerId);
+                if (Objects.isNull(item)) {
+                    throw new NotFoundItemException(itemId);
+                }
                 aggregator.item = item;
                 return aggregator;
             });

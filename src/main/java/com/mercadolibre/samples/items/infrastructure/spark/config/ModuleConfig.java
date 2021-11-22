@@ -1,8 +1,8 @@
 package com.mercadolibre.samples.items.infrastructure.spark.config;
 
 import com.google.inject.AbstractModule;
-import com.mercadolibre.samples.items.domain.repositories.ItemRepository;
-import com.mercadolibre.samples.items.infrastructure.spring.repositories.RestItemAdapter;
+import com.mercadolibre.samples.items.application.usecases.ItemUseCases;
+import com.mercadolibre.samples.items.infrastructure.spark.repositories.RestItemAdapter;
 
 /**
  * The module configuration.
@@ -12,6 +12,6 @@ public class ModuleConfig extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(ItemRepository.class).to(RestItemAdapter)
+        bind(ItemUseCases.class).toInstance(new ItemUseCases(new RestItemAdapter()));
     }
 }
